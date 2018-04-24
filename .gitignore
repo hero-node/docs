@@ -58,4 +58,4 @@ typings/
 .env
 
 # existed generated doc file
-swagger.json
+# swagger.json

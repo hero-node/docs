@@ -1,0 +1,26 @@
+language: java
+env:
+  global:
+    - GH-REF: github.com/hero-node/docs.git
+    - secure: "fczMB61k1vZvlijuCjPG+j1Ch7qfuaZDfmGbbOFtaZGO/5fUvsrMrp8uBNntnc/oTXGrnND15k7HYRWAazVop9Pqrk9fOSR9UOYmvogTJ/D0pjc+zukduSPfp6FxJ7TpHWVa0pHLwHR495KCgQj2bqvb0GdgpjmjjGC6bJFoyQ4rB/q/t/pA2SHr3/Buuk/qBEI66roznCAibrmmEy6c/CH5F3V+UmLFOF+XZ++Ez2ByCic/6Ydf3qDlQvrpYkZ03HGbHBgUuRuyFJPegUBh2mSlb4K5HpDGimpNI28mRMeawk6LtrwzIjY2jdpLKmP8hS0BTWf6Q6xZyefb17MrqtX2gTyZ3dP+9mR/yelbg0FAo+vFAek6sVBHexvSDq6l4hysTPNIdRnKEqJstBTJi13ky1tgBatldSoWoSovHEdeWwVmaWkvGjzhpCD+GMBsCYrWOiXQRU9CE4sXOpEy27r2wVCJmE2rXJcZgvEiPldfGB0ApO4ENq7A1hemCWx08goK8+zOCK1Tt0AydzVBRm0ur112Q38bLPSwU40nhMEApwgXsGfnIAM/c+05DrQSSn0Pvn7zfeIcOwXbOwnCgA9nErLs/xBx+f9g0DC5JG4BhG+NkbTr8BrpoBshqwYXytcKhvaMBVTJNkB/lZfyDoVnk2jp44Qb0qYk3+jahq0="
+
+branches:
+  # blocklist
+  except:
+  - gh_pages
+  only:
+  - master
+
+before_script:
+  - wget https://oss.sonatype.org/content/repositories/releases/io/swagger/swagger-codegen-cli/2.2.1/swagger-codegen-cli-2.2.1.jar
+
+script:
+  - java -jar swagger-codegen-cli-2.2.1.jar generate -i ./swagger.yaml -l swagger
+  
+after_script:
+  - git init
+  - git config user.name "destec"
+  - git config user.email "destecx@gmail.com"
+  - git add .
+  - git commit -m "Update docs"
+  - git push -f "https://${GH_TOKEN}@github.com/hero-node/docs.git" master:gh-pages
