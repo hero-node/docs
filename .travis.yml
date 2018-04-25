@@ -20,6 +20,9 @@ after_script:
   - git init
   - git config user.name "Heronode devbot"
   - git config user.email "dev@heronode.io"
+  - git checkout -b gh-pages
   - git add .
   - git commit -m "Update docs"
-  - git push -f "https://${GH_TOKEN}@github.com/hero-node/docs.git" master:gh-pages
+  - git log
+  - git branch
+  - git push -f "https://${GH_TOKEN}@github.com/hero-node/docs.git" gh-pages:gh-pages
