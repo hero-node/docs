@@ -62,9 +62,9 @@ paths:
                   chain:
                     type: "string"
                     example: "main"
-                blocks:
-                  type: "number"
-                  exmaple: 519978
+                  blocks:
+                    type: "number"
+                    example: 519978
               Qtum:
                 type: "object"
                 properties:
@@ -195,7 +195,7 @@ paths:
         200:
           description: OK
           schema:
-            type: object
+            type: "object"
             properties:
               result:
                 type: "string"
@@ -208,7 +208,7 @@ paths:
                     example: "Eth"
                   height: 
                     type: "number"
-                    exmaple: 512323 
+                    example: 512323 
   /blockHash/{chain}/{height}:
     get:
       tags: 
@@ -409,15 +409,17 @@ paths:
             type: object
             properties:
               result:
-                type: "string",
+                type: "string"
                 example: "success"
               content:
-                chain:
-                  type: "string"
-                  example: "Eth"
-                gasPrice:
-                  type: "number"
-                  example: 10000000000000
+                type: "object"
+                properties:
+                  chain:
+                    type: "string"
+                    example: "Eth"
+                  gasPrice:
+                    type: "number"
+                    example: 10000000000000
   /account/transaction/count/{chain}/{address}:
     get:
       tags: 
