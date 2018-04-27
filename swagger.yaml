@@ -1,38 +1,362 @@
 swagger: "2.0"
 info:
-  version: "0.0.1"
-  title: Heronode
-# during dev, should point to your local machine
-host: localhost
-# basePath prefixes all resource paths
-basePath: /
-#
+  description: "This is Hero Node API Document."
+  version: "1.0.0"
+  title: "Hero Node API"
+  termsOfService: "http://heronode.io"
+  contact:
+    email: "dev@heronode.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/v1"
+tags:
+- name: "General"
+  description: "General API"
+- name: "Block"
+  description: "Block API"
+- name: "Transaction"
+  description: "Transaction API"
+- name: Eth
+  description: Unique API for Ethereum
 schemes:
-  # tip: remove http to make production-grade
-  - http
-  - https
-# format of bodies a client can send (Content-Type)
-consumes:
-  - application/json
-# format of the responses to the client (Accepts)
-produces:
-  - application/json
+- "http"
 paths:
-  /hello:
-    # binds swagger app logic to a route
-    x-swagger-router-controller: hello_world
+  /info:
     get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
-      parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
-          type: string
+      tags: 
+      - "General"
+      summary: Get current node info
       responses:
-        "200":
-          description: Success
+        200:
+          description: OK
           schema:
-            # a pointer to a definition
+            type: "object"
+            example: {
+              result : success,
+              content: HN-v1.0.0-stable/linux-amd64/go1.10
+            }
+  /chains:
+    get:
+      tags:
+      - "General"
+      summary: Get all public chains of the node
+      responses:
+        200:
+          description: OK
+          schema:
+            type: "object"
+            example: {
+              Eth: {
+                result: Geth/v1.8.4-stable-2423ae01/linux-amd64/go1.10
+              },
+              Btc: {
+                "chain":"main",
+                "blocks":519978,
+              },
+              Qtum: {
+                version: 141501,
+                "protocolversion": 70016,
+                "blocks": 142651,
+              }
+            }
+            
+  /available/{chain}:
+    get:
+      tags: 
+      - "General"
+      summary: Check if the specific chain is run on the node
+      parameters: 
+      - name: chain
+        in: path
+        required: true
+        type: string
+        enum: 
+        - "Eth"
+        - "Btc"
+        - "Qtum"
+        default: "Eth"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {
+              result: success,
+              content: {
+                available: 1
+              }
+            }
+            
+  /balance/{chain}/{address}:
+    get:
+      tags: 
+      - "General"
+      summary: Get balance by address
+      parameters: 
+      - name: chain
+        in: path
+        required: true
+        type: string
+        enum: 
+        - "Eth"
+        - "Btc"
+        - "Qtum"
+      - name: address
+        in: path
+        required: true
+        type: string
+        description: Account address
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {
+              result: success,
+              content: {
+                chain: Eth,
+                balance: 12932032932932932
+              }
+            }
+    
+  /mining/{chain}:
+    get:
+      tags: 
+      - General
+      summary: If the node is mining
+      parameters: 
+      - name: chain
+        in: path
+        required: true
+        type: string
+        enum: 
+        - "Eth"
+        - "Btc"
+        - "Qtum"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {
+              result: success,
+              content: {
+                chain: Eth,
+                mining: 1
+              }
+            }
+    
+  
+  /blockHeight/{chain}:
+    get:
+      tags:
+      - "Block"
+      summary: Get block height
+      parameters: 
+      - name: chain
+        in: path
+        required: true
+        type: string
+        enum: 
+        - Eth
+        - Btc
+        - Qtum
+        default: Eth
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {
+              result: success,
+              content: {
+                chain: Eth,
+                height: 512323
+              }
+            }
+            
+  /blockHash/{chain}/{height}:
+    get:
+      tags: 
+      - Block
+      summary: Get blockhash by height
+      parameters: 
+      - name: chain
+        in: path
+        required: true
+        type: string
+        enum: 
+        - Eth
+        - Btc
+        - Qtum
+        default: Eth
+      - name: height
+        in: path
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {
+              result: success,
+              content: {
+                chain: Eth,
+                hash: "0x20760fc157ec26e4dbe34d5ae91da542d92f715803b407ae61d3ff661f798b8d"
+              }
+            }
+        
+  /block/{chain}:
+    get:
+      tags: 
+      - Block
+      summary: Get block info by height or hash
+      parameters: 
+      - name: chain
+        in: path
+        required: true
+        type: string
+        enum: 
+        - Eth
+        - Btc
+        - Qtum
+        default: Eth
+      - name: height
+        in: query
+        required: false
+        type: integer
+        format: int64
+        description: blockHeight, like 51132
+      - name: hash
+        in: query
+        required: false
+        type: string
+        description: blockHash, like "0x20760fc157ec26e4dbe34d5ae91da542d92f715803b407ae61d3ff661f798b8d"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {
+              result: success,
+              content: {
+                chain: Eth,
+                "block": {
+                  "number": 436,
+                  "hash": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
+                  "parentHash": "0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5",
+                  "nonce": "0xe04d296d2460cfb8472af2c5fd05b5a214109c25688d3704aed5484f9a7792f2",
+                  "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+                  "logsBloom": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
+                  "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+                  "stateRoot": "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff",
+                  "miner": "0x4e65fda2159562a496f9f3522f89122a3088497a",
+                  "difficulty": 163591,
+                  "totalDifficulty":  163591,
+                  "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                  "size":  163591,
+                  "gasLimit": 653145, 
+                  "gasUsed": 653145,
+                  "timestamp": 1424182926,
+                  "transactions": ["...", "..."],
+                  "uncles": ["0x1606e5...", "0xd5145a9..."]
+                }
+              }
+            }
+  
+  /sendRawTransaction/{chain}/{data}:
+    post:
+      tags: 
+      - Transaction
+      summary: Developer must signed locally, and then send RawTransaction
+      parameters: 
+      - name: chain
+        in: path
+        required: true
+        type: string
+        enum: 
+        - Eth
+        - Btc
+        - Qtum
+      - name: data
+        in: path
+        required: true
+        type: string
+        description: Signed transacrion data
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {
+              result: success,
+              content: {
+                chain: Eth,
+                txId: "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"
+              }
+            }
+  
+  /gasPrice/{chain}:
+    get:
+      tags: 
+      - General
+      summary: Get current per gas in wei
+      description: Now only available with Eth
+      parameters: 
+      - name: chain
+        in: path
+        required: true
+        type: string
+        enum: 
+        - Eth
+        - Btc
+        - Qtum
+        default: Eth
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {
+              result: success,
+              content: {
+                chain: Eth,
+                gasPrice: 10000000000000
+              }
+            }
+  
+  /account/transaction/count/{chain}/{address}:
+    get:
+      tags: 
+      - Transaction
+      summary: Get transaction count by address
+      parameters: 
+      - name: chain
+        in: path
+        required: true
+        type: string
+        enum: 
+        - Eth
+        - Btc
+        - Qtum
+      - name: address
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {
+              result: success,
+              content: {
+                count: 102
+              }
+            }
+    
+    
+    
