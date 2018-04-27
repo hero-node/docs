@@ -32,10 +32,13 @@ paths:
           description: OK
           schema:
             type: "object"
-            example: {
-              result : success,
-              content: HN-v1.0.0-stable/linux-amd64/go1.10
-            }
+            properties:
+              result:
+                type: "string"
+                example: "success"
+              content: 
+                type: "styring"
+                example: "HN-v1.0.0-stable/linux-amd64/go1.10"
   /chains:
     get:
       tags:
@@ -46,21 +49,34 @@ paths:
           description: OK
           schema:
             type: "object"
-            example: {
-              Eth: {
-                result: Geth/v1.8.4-stable-2423ae01/linux-amd64/go1.10
-              },
-              Btc: {
-                "chain":"main",
-                "blocks":519978,
-              },
-              Qtum: {
-                version: 141501,
-                "protocolversion": 70016,
-                "blocks": 142651,
-              }
-            }
-            
+            properties:
+              Eth:
+                type: "object"
+                properties:
+                  result: 
+                    type: "string"
+                    example: "Geth/v1.8.4-stable-2423ae01/linux-amd64/go1.10"
+              Btc:
+                type: "object"
+                properties:
+                  chain:
+                    type: "string"
+                    example: "main"
+                blocks:
+                  type: "number"
+                  exmaple: 519978
+              Qtum:
+                type: "object"
+                properties:
+                  version: 
+                    type: "number"
+                    example: 141501
+                  protocolversion:
+                    type: "number"
+                    example: 70016
+                  blocks: 
+                    type: "number"
+                    example: 142651
   /available/{chain}:
     get:
       tags: 
