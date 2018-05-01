@@ -11,14 +11,16 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 basePath: "/v1"
 tags:
-- name: "General"
+- name: General
   description: "General API"
-- name: "Block"
+- name: Block
   description: "Block API"
-- name: "Transaction"
+- name: Transaction
   description: "Transaction API"
 - name: Eth
   description: Unique API for Ethereum
+- name: Storage
+  description: Storage API based on IPFS
 schemes:
 - "http"
 paths:
@@ -453,3 +455,29 @@ paths:
                   count:
                     type: "number"
                     example: 102
+  /api/ipfs/upload/raw:
+    get:
+      tags:
+      - Storage
+      summary: Upload raw payload to IPFS
+      parameters:
+      - name: content
+        in: body
+        required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                path:
+                  type: string
+                  exmaple: "QmRf22bZar3WKmojipms22PkXH1MZGmvsqzQtuSvQE3uhm"
+                hash:
+                  type: string
+                  example: "QmRf22bZar3WKmojipms22PkXH1MZGmvsqzQtuSvQE3uhm"
+                size:
+                  type: number
+                  example: 12
