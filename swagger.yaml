@@ -17,8 +17,6 @@ tags:
   description: "Block API"
 - name: Transaction
   description: "Transaction API"
-- name: Eth
-  description: Unique API for Ethereum
 - name: Storage
   description: Storage API based on IPFS
 schemes:
