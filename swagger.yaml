@@ -511,3 +511,16 @@ paths:
                 size:
                   type: number
                   example: 12
+  /api/ipfs/cat:
+    get:
+      tags:
+      - Storage
+      summary: Cat file from IPFS
+      parameters:
+      - name: hash
+        in: query
+        required: true
+        type: string
+      responses:
+        200:
+          description: OK
