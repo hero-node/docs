@@ -1,6 +1,2 @@
-# docs
-
-[![Build Status](https://travis-ci.org/hero-node/docs.svg?branch=master)](https://travis-ci.org/hero-node/docs)
-
-The document for nodes
-Please visit: [https://hero-node.github.io/docs/](https://hero-node.github.io/docs/)
+# Swagger JSON
+This is a swagger JSON built by the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project.
